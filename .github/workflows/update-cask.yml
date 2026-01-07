@@ -1,0 +1,43 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [update-cask]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update cask formula
+        run: |
+          CASK="${{ github.event.client_payload.cask }}"
+          VERSION="${{ github.event.client_payload.version }}"
+          SHA256="${{ github.event.client_payload.sha256 }}"
+          
+          echo "Updating $CASK to version $VERSION"
+          echo "SHA256: $SHA256"
+          
+          # Update version
+          sed -i "s/version \".*\"/version \"$VERSION\"/" "Casks/$CASK.rb"
+          
+          # Update sha256
+          sed -i "s/sha256 \".*\"/sha256 \"$SHA256\"/" "Casks/$CASK.rb"
+          
+          # Show the updated file
+          echo "=== Updated formula ==="
+          cat "Casks/$CASK.rb"
+
+      - name: Commit and push
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "Update ${{ github.event.client_payload.cask }} to v${{ github.event.client_payload.version }}"
+          git push
+
