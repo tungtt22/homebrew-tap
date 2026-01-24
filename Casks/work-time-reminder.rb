@@ -1,6 +1,6 @@
 cask "work-time-reminder" do
-  version "1.2.0"
-  sha256 "cea9c218aea50726989551349014f9fe12defc5e5adb43cda2c4685426bd78b6"
+  version "1.3.0"
+  sha256 "94f945cacca3dc38f5f9aacb964ad551f5d17d9e4e2a4cbb163dde80ab6197f4"
 
   url "https://github.com/tungtt22/WorkTimeReminder/releases/download/v#{version}/WorkTimeReminder-#{version}.zip"
   name "Work Time Reminder"
